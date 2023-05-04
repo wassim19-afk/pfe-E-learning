@@ -35,7 +35,7 @@ export default function PostCard() {
                                 Wess Garali
                             </span>
                         </Link>
-                        shared a 
+                        shared a
                         <a className="mx-1 text-socialBlue">
                             post
                         </a>
