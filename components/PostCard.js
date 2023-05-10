@@ -3,9 +3,10 @@ import Avatar from "./Avatar";
 import ClickOutHandler from 'react-clickout-handler'
 import { useState } from "react";
 import Link from "next/link";
+import ReactTimeAgo from 'react-time-ago';
+
 
 export default function PostCard({ content, created_at, profiles: authorProfile }) {
-
     const [dropdownOpen, setDropdawnOpen] = useState(false);
     function openDropdown(e) {
         if (dropdownOpen) {
@@ -14,7 +15,7 @@ export default function PostCard({ content, created_at, profiles: authorProfile 
         e.stopPropagation();
         setDropdawnOpen(true);
     }
-    
+
     function handleClickOutsideDropdown(e) {
         e.stopPropagation();
         setDropdawnOpen(false);
@@ -26,7 +27,7 @@ export default function PostCard({ content, created_at, profiles: authorProfile 
                 <div>
                     <Link href={'/profile'}>
                         <span className="cursor-pointer">
-                            <Avatar url={authorProfile?.avatar}/>
+                            <Avatar url={authorProfile?.avatar} />
                         </span>
                     </Link>
                 </div>
@@ -42,7 +43,9 @@ export default function PostCard({ content, created_at, profiles: authorProfile 
                             post
                         </a>
                     </p>
-                    <p className="text-gray-500 text-sm">2 hours ago</p>
+                    <p className="text-gray-500 text-sm">
+                        <ReactTimeAgo date={created_at} locale="en-US" />
+                    </p>
                 </div>
                 <div className="relative ">
                     <button className="text-gray-400" onClick={openDropdown}>
