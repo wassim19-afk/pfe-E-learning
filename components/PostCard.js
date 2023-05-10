@@ -14,10 +14,12 @@ export default function PostCard({ content, created_at, profiles: authorProfile 
         e.stopPropagation();
         setDropdawnOpen(true);
     }
+    
     function handleClickOutsideDropdown(e) {
         e.stopPropagation();
         setDropdawnOpen(false);
     }
+
     return (
         <Card>
             <div className="flex gap-3">
@@ -32,7 +34,7 @@ export default function PostCard({ content, created_at, profiles: authorProfile 
                     <p>
                         <Link href={'/profile'}>
                             <span className="mr-1 font-semibold cursor-pointer hover:underline">
-                                Wess Garali
+                                {authorProfile.name}
                             </span>
                         </Link>
                         shared a

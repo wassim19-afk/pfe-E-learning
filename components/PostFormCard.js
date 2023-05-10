@@ -3,7 +3,7 @@ import Card from "./Card";
 import { useEffect, useState } from "react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 
-export default function PostFormCard() {
+export default function PostFormCard({onPost}) {
     const [profile, setProfile] = useState(null);
     const [content, setContent] = useState('');
     const [categorie, setCategorie] = useState('');
@@ -50,7 +50,9 @@ export default function PostFormCard() {
             }).then(response => {
                 if (!response.error) {
                     setContent('');
-                    alert('created');
+                    if(onPost){
+                        onPost();
+                    }
                 }
             });
         }

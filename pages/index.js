@@ -20,6 +20,17 @@ export default function Home() {
         setPosts(result.data);
       })
   }, [])
+   
+
+  function fetchPosts() {
+    supabase.from('posts')
+      .select('id,content,created_at, profiles(id, avatar, name)')
+      .order('created_at', { ascending: false })
+      .then(result => {
+        console.log('posts', result);
+        setPosts(result.data);
+      })
+  }
 
   if (!session) {
     return <LoginPage />
@@ -27,8 +38,8 @@ export default function Home() {
 
   return (
     <Layout>
-      <PostFormCard />
-      {posts?.length && posts.map(post => (
+      <PostFormCard onPost={fetchPosts}/>
+      {posts?.length > 0 && posts.map(post => (
         <PostCard key={post.created_at} {...post} />
       ))}
     </Layout>
