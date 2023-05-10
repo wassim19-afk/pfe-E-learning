@@ -4,7 +4,7 @@ import PostFormCard from "@/components/PostFormCard"
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react"
 import LoginPage from "./login";
 import { useEffect, useState } from "react";
-import { Result } from "postcss";
+
 
 
 export default function Home() {
@@ -14,7 +14,8 @@ export default function Home() {
 
   useEffect(() => {
     supabase.from('posts')
-      .select()
+      .select('id ,content ,created_at ,profiles(id,avatar,name)')
+      .order('created_at', { ascending: false })
       .then(result => {
         setPosts(result.data);
       })
@@ -27,8 +28,8 @@ export default function Home() {
   return (
     <Layout>
       <PostFormCard />
-      {posts.map(posts => (
-        <PostCard {...posts}/>
+      {posts?.length && posts.map(post => (
+        <PostCard key={post.created_at} {...post} />
       ))}
     </Layout>
   )

@@ -4,7 +4,7 @@ import ClickOutHandler from 'react-clickout-handler'
 import { useState } from "react";
 import Link from "next/link";
 
-export default function PostCard() {
+export default function PostCard({ content, created_at, profiles: authorProfile }) {
 
     const [dropdownOpen, setDropdawnOpen] = useState(false);
     function openDropdown(e) {
@@ -24,7 +24,7 @@ export default function PostCard() {
                 <div>
                     <Link href={'/profile'}>
                         <span className="cursor-pointer">
-                            <Avatar />
+                            <Avatar url={authorProfile?.avatar}/>
                         </span>
                     </Link>
                 </div>
@@ -90,7 +90,7 @@ export default function PostCard() {
                 </div>
             </div>
             <div>
-                <p className="my-3 text-sm">TestGorilla makes finding the right candidate easy. Fast, unbiased, affordable testing. Find the best programmers and verify their skills fast. TestGorilla makes it easy. Cheat Prevention. Simple Test Creation. Hire Objectively. Good Candidate Experience. Video Replies.</p>
+                <p className="my-3 text-sm">{content}</p>
                 <div className="rounded-md overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cmVhY3QlMjBqc3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="image" />
                 </div>

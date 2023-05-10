@@ -6,6 +6,7 @@ import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 export default function PostFormCard() {
     const [profile, setProfile] = useState(null);
     const [content, setContent] = useState('');
+    const [categorie, setCategorie] = useState('');
     const supabase = useSupabaseClient();
     const session = useSession();
 
@@ -26,14 +27,28 @@ export default function PostFormCard() {
         if (document.getElementById('idea').checked) {
             //idea post
         } else if (document.getElementById('course').checked) {
+            //categorie = prompt('What is your course category?');
             //course post
+            /*
+            supabase.from('course').insert({
+                author: session.user.id,
+                content,
+                categorie,
+            }).then(response => {
+                if(!response.error){
+                    setContent('');
+                    setCategorie('');
+                    alert('created');
+                }
+            });
+            */
         } else {
             //simple post
             supabase.from('posts').insert({
                 author: session.user.id,
                 content,
             }).then(response => {
-                if(!response.error){
+                if (!response.error) {
                     setContent('');
                     alert('created');
                 }
