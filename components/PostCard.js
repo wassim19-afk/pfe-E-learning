@@ -1,13 +1,15 @@
 import Card from "./Card";
 import Avatar from "./Avatar";
 import ClickOutHandler from 'react-clickout-handler'
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Link from "next/link";
 import ReactTimeAgo from 'react-time-ago';
-
+import { UserContext } from "@/contexts/UserContent";
 
 export default function PostCard({ content, created_at, profiles: authorProfile }) {
     const [dropdownOpen, setDropdawnOpen] = useState(false);
+    const { profile: myProfile } = useContext(UserContext);
+
     function openDropdown(e) {
         if (dropdownOpen) {
             return;
@@ -56,7 +58,6 @@ export default function PostCard({ content, created_at, profiles: authorProfile 
                     {dropdownOpen && (
                         <div className="bg-red w-5 h-5 absolute top-0"></div>
                     )}
-
                     <ClickOutHandler onClickOut={handleClickOutsideDropdown}>
                         <div className="relative">
                             {dropdownOpen && (
@@ -122,7 +123,7 @@ export default function PostCard({ content, created_at, profiles: authorProfile 
             </div>
             <div className="flex mt-4 gap-3">
                 <div>
-                    <Avatar />
+                    <Avatar url={myProfile?.avatar} />
                 </div>
                 <div className="border grow rounded-full relative">
                     <textarea className="block w-full p-3 px-4 overflow-hidden h-12 rounded-full" placeholder="leave a comment" />

@@ -1,34 +1,25 @@
 import Avatar from "./Avatar";
 import Card from "./Card";
-import { useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { UserContext } from "@/contexts/UserContent";
+import PreviousMap from "postcss/lib/previous-map";
 
-export default function PostFormCard({onPost}) {
-    const [profile, setProfile] = useState(null);
+export default function PostFormCard({ onPost }) {
+
     const [content, setContent] = useState('');
     const [categorie, setCategorie] = useState('');
     const supabase = useSupabaseClient();
     const session = useSession();
-
-    useEffect(() => {
-        //alert(session.user.id);
-        supabase.from('profiles')
-            .select()
-            .eq('id', session.user.id)
-            .then(result => {
-                if (result.data.length) {
-                    setProfile(result.data[0]);
-                }
-            })
-    }, []);
-
+    const { profile } = useContext(UserContext);
+    const [uploads, setUploads] = useState([]);
 
     function createPost() {
         if (document.getElementById('idea').checked) {
             //idea post
         } else if (document.getElementById('course').checked) {
+            //course post 
             //categorie = prompt('What is your course category?');
-            //course post
             /*
             supabase.from('course').insert({
                 author: session.user.id,
@@ -50,7 +41,7 @@ export default function PostFormCard({onPost}) {
             }).then(response => {
                 if (!response.error) {
                     setContent('');
-                    if(onPost){
+                    if (onPost) {
                         onPost();
                     }
                 }
@@ -58,18 +49,60 @@ export default function PostFormCard({onPost}) {
         }
     }
 
+    function addFiles(ev) {
+        const files = ev.target.files;
+        for (const file of files) {
+            const newName = Date.now() + file.name;
+            supabase.storage.from('photos')
+                .upload(newName, file)
+                .then(result => {
+                    if (result.data) {
+                        const url = process.env.NEXT_PUBLIC_SUPABASE_URL + '/storage/v1/object/public/photos/' + result.data.path
+                        setUploads(PrevUploads => [...prevUploads, url]);
+
+                        alert('File uploaded successfully!');
+                    }
+                    else {
+                        console.log(result);
+                    }
+                }
+                )
+        }
+    }
+
+
     return (
         <Card>
             <div className="flex gap-2 ">
                 <div>
-                    {profile && (
-                        <Avatar url={profile?.avatar} />
-                    )}
+                    <Avatar url={profile?.avatar}/>
                 </div>
-                <textarea className="grow p-3 h-14" value={content} onChange={e => setContent(e.target.value)} placeholder={`what's on your mind, ${profile?.name}?`} />
+                {profile && (
+                    <textarea value={content} className="grow p-3 h-14"
+                        onChange={e => setContent(e.target.value)}
+                        placeholder={`what's on your mind, ${profile?.name}?`} />
+                )}
             </div>
-
+            {uploads.length > 0 && (
+                <div className="">
+                    {uploads.map(upload => (
+                        <div className="">
+                            <img src={upload} alt="" className="w-auto h-24 rounded-md"/>
+                        </div>
+                    ))}
+                </div>
+            )}
             <div className="flex gap-5 items-center mt-2">
+
+                <div>
+                    <label className="flex gap-1">
+                        <input type="file" className="hidden" multiple onChange={addFiles} accept="*/*" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                        </svg>
+                        <span className="hidden md:block">Files</span>
+                    </label>
+                </div>
 
                 <div>
                     <button className="flex gap-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
